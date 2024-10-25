@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>플레이리스트 생성</title>
+  <style>
+    /* 전체 화면을 감싸는 컨테이너 */
+    .chat-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    #chat-box {
+      width: 400px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-message {
+      margin-bottom: 15px;
+      padding: 10px;
+      background-color: #e0f7fa;
+      border-radius: 10px;
+    }
+
+    .bot {
+      color: #00796b;
+    }
+
+    .chat-options, .country-options, .genre-options, .popularity-options, .release-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+    }
+
+    .option-button {
+      padding: 10px 15px;
+      border: none;
+      background-color: #00796b;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .option-button:hover {
+      background-color: #004d40;
+    }
+
+    .option-button.selected {
+      background-color: #ff9800;
+    }
+
+    /* 숨김 처리 */
+    #country-selection, #genre-selection, #detail-selection, #popularity-selection, #release-selection {
+      display: none;
+    }
+
+    /* 선택 완료 버튼을 오른쪽 정렬하고 이전 버튼과의 간격을 추가 */
+    .submit-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    /* 이전 버튼과 제출 버튼 사이 간격 */
+    .previous-button {
+      margin-right: 20px;
+    }
+
+    /* 입력 필드를 위한 스타일 */
+    .input-field {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div id="chat-box">
+      <!-- 첫 페이지 인터페이스 -->
+      <div id="first-page">
+        <div class="chat-message bot">
+          <p>안녕하세요! 🎵 오늘의 플레이리스트를 만들어볼까요?</p>
+          <p>원하는 작업을 선택해주세요!</p>
+        </div>
+
+        <!-- 사용자에게 선택지 제공 -->
+        <div class="chat-options">
+          <button class="option-button" onclick="createPlaylist()">🎶 플레이리스트 만들기</button>
+          <button class="option-button" onclick="viewPlaylist()">📂 플레이리스트 보기</button>
+        </div>
+      </div>
+
+      <!-- 국가 선택 UI -->
+      <div id="country-selection">
+        <p>플레이리스트에서 선택할 국가를 고르세요! (복수 선택 가능)</p>
+        <div class="country-options">
+          <button class="option-button" onclick="toggleCountry('Korea', this)">한국</button>
+          <button class="option-button" onclick="toggleCountry('USA', this)">미국</button>
+          <button class="option-button" onclick="toggleCountry('Japan', this)">일본</button>
+        </div>
+        <div class="submit-container">
+          <button class="option-button" onclick="submitCountries()">선택 완료</button>
+        </div>
+      </div>
+
+      <!-- 장르 선택 UI -->
+      <div id="genre-selection">
+        <p>플레이리스트에서 선택할 장르를 고르세요!</p>
+        <div class="genre-options" id="genre-options"></div>
+        <div class="submit-container">
+          <button class="option-button previous-button" onclick="goBackToCountries()">이전</button>
+          <button class="option-button" onclick="submitGenres()">선택 완료</button>
+        </div>
+      </div>
+
+      <!-- 세부 특성 입력 UI -->
+      <div id="detail-selection">
+        <p>세부 특성을 입력해주세요!</p>
+        <input type="text" id="mood-input" class="input-field" placeholder="원하는 분위기를 입력하세요 (예: 차분함, 신남)">
+        <input type="text" id="artist-input" class="input-field" placeholder="특정 아티스트를 입력하세요 (선택 사항)">
+        <input type="text" id="exclude-artist-input" class="input-field" placeholder="제외하고 싶은 아티스트를 입력하세요 (선택 사항)">
+        <div class="submit-container">
+          <button class="option-button previous-button" onclick="goBackToGenres()">이전</button>
+          <button class="option-button" onclick="submitDetails()">제출</button>
+        </div>
+      </div>
+
+      <!-- 조회수 선택 UI -->
+      <div id="popularity-selection">
+        <p>조회수 기준으로 유명도를 선택하세요!</p>
+        <div class="popularity-options">
+          <button class="option-button" onclick="selectPopularity('1억 up')">1억 up</button>
+          <button class="option-button" onclick="selectPopularity('1000만-1억')">1000만-1억</button>
+          <button class="option-button" onclick="selectPopularity('100만-1000만')">100만-1000만</button>
+          <button class="option-button" onclick="selectPopularity('10만-100만')">10만-100만</button>
+          <button class="option-button" onclick="selectPopularity('1만-10만')">1만-10만</button>
+          <button class="option-button" onclick="selectPopularity('1만 이하')">1만 이하</button>
+        </div>
+        <div class="submit-container">
+          <button class="option-button previous-button" onclick="goBackToDetails()">이전</button>
+          <button class="option-button" onclick="submitPopularity()">제출</button>
+        </div>
+      </div>
+
+      <!-- 출시 시기 선택 UI -->
+      <div id="release-selection">
+        <p>나온 시기를 선택해주세요! (복수 선택 가능)</p>
+        <div class="release-options">
+          <button class="option-button" onclick="toggleRelease('2020-2024', this)">2020-2024</button>
+          <button class="option-button" onclick="toggleRelease('2015-2020', this)">2015-2020</button>
+          <button class="option-button" onclick="toggleRelease('2010-2015', this)">2010-2015</button>
+          <button class="option-button" onclick="toggleRelease('2010 이하', this)">2010 이하</button>
+        </div>
+        <div class="submit-container">
+          <button class="option-button previous-button" onclick="goBackToPopularity()">이전</button>
+          <button class="option-button" onclick="submitRelease()">제출</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 선택한 국가와 장르, 인기도, 출시 시기를 저장할 변수
+    let selectedCountries = [];
+    let selectedGenres = [];
+    let selectedPopularity = '';
+    let selectedReleases = [];
+
+    // 국가별 장르 목록
+    const genreData = {
+      common: ['Hiphop', 'Rock', 'R&B', 'Dance', 'Edm', 'Indie', 'Jazz', 'Folk', 'Ost'],
+      Korea: ['K-Pop', '발라드'],
+      USA: ['Pop'],
+      Japan: ['Animation']
+    };
+
+    // 플레이리스트 만들기 버튼을 누를 때 동작
+    function createPlaylist() {
+      document.getElementById('first-page').style.display = 'none';
+      document.getElementById('country-selection').style.display = 'block';
+    }
+
+    // 국가 선택/해제 처리
+    function toggleCountry(country, button) {
+      const index = selectedCountries.indexOf(country);
+
+      if (index > -1) {
+        selectedCountries.splice(index, 1);
+        button.classList.remove('selected');
+      } else {
+        selectedCountries.push(country);
+        button.classList.add('selected');
+      }
+    }
+
+    // 국가 선택 완료
+    function submitCountries() {
+      if (selectedCountries.length === 0) {
+        alert("국가를 하나 이상 선택해주세요!");
+      } else {
+        document.getElementById('country-selection').style.display = 'none';
+        document.getElementById('genre-selection').style.display = 'block';
+        displayGenres();
+      }
+    }
+
+    // 장르 선택 표시
+    function displayGenres() {
+      const genreOptions = document.getElementById('genre-options');
+      genreOptions.innerHTML = '';
+
+	        let genresToShow = [...genreData.common];
+
+	        selectedCountries.forEach(country => {
+	          genresToShow = [...new Set([...genresToShow, ...genreData[country]])];
+	        });
+
+	        genresToShow.forEach(genre => {
+	          const button = document.createElement('button');
+	          button.className = 'option-button';
+	          button.textContent = genre;
+	          button.onclick = () => toggleGenre(genre, button);
+	          genreOptions.appendChild(button);
+	        });
+	      }
+
+	      // 장르 선택/해제 처리
+	      function toggleGenre(genre, button) {
+	        const index = selectedGenres.indexOf(genre);
+
+	        if (index > -1) {
+	          selectedGenres.splice(index, 1);
+	          button.classList.remove('selected');
+	        } else {
+	          selectedGenres.push(genre);
+	          button.classList.add('selected');
+	        }
+	      }
+
+	      // 장르 선택 완료
+	      function submitGenres() {
+	        if (selectedGenres.length === 0) {
+	          alert("장르를 하나 이상 선택해주세요!");
+	        } else {
+	          document.getElementById('genre-selection').style.display = 'none';
+	          document.getElementById('detail-selection').style.display = 'block';
+	        }
+	      }
+
+	      // 세부 특성 제출
+	      function submitDetails() {
+	        const mood = document.getElementById('mood-input').value;
+	        const artist = document.getElementById('artist-input').value;
+	        const excludeArtist = document.getElementById('exclude-artist-input').value;
+
+	        alert(`입력한 세부 특성:\n분위기: ${mood}\n특정 아티스트: ${artist}\n제외할 아티스트: ${excludeArtist}`);
+
+	        document.getElementById('detail-selection').style.display = 'none';
+	        document.getElementById('popularity-selection').style.display = 'block';
+	      }
+
+	      // 인기도 선택 처리
+	      function selectPopularity(popularity) {
+	        selectedPopularity = popularity;
+	        alert(`선택한 조회수: ${popularity}`);
+	      }
+
+	      // 인기도 제출
+	      function submitPopularity() {
+	        if (!selectedPopularity) {
+	          alert("조회수를 하나 이상 선택해주세요!");
+	        } else {
+	          document.getElementById('popularity-selection').style.display = 'none';
+	          document.getElementById('release-selection').style.display = 'block';
+	        }
+	      }
+
+	      // 출시 시기 선택/해제 처리
+	      function toggleRelease(release, button) {
+	        const index = selectedReleases.indexOf(release);
+
+	        if (index > -1) {
+	          selectedReleases.splice(index, 1);
+	          button.classList.remove('selected');
+	        } else {
+	          selectedReleases.push(release);
+	          button.classList.add('selected');
+	        }
+	      }
+
+	      // 출시 시기 제출
+	      function submitRelease() {
+	        if (selectedReleases.length === 0) {
+	          alert("출시 시기를 하나 이상 선택해주세요!");
+	        } else {
+	          alert(`선택한 출시 시기: ${selectedReleases.join(', ')}`);
+	          // 여기서 서버로 데이터를 전송하거나 추가 로직을 넣을 수 있음
+	        }
+	      }
+
+	      // 이전 페이지로 돌아가는 함수들
+	      function goBackToCountries() {
+	        document.getElementById('genre-selection').style.display = 'none';
+	        document.getElementById('country-selection').style.display = 'block';
+	      }
+
+	      function goBackToGenres() {
+	        document.getElementById('detail-selection').style.display = 'none';
+	        document.getElementById('genre-selection').style.display = 'block';
+	      }
+
+	      function goBackToDetails() {
+	        document.getElementById('popularity-selection').style.display = 'none';
+	        document.getElementById('detail-selection').style.display = 'block';
+	      }
+
+	      function goBackToPopularity() {
+	        document.getElementById('release-selection').style.display = 'none';
+	        document.getElementById('popularity-selection').style.display = 'block';
+	      }
+
+	      function viewPlaylist() {
+	        alert("플레이리스트 보기로 이동합니다!");
+	      }
+	    </script>
+	  </body>
+	  </html>
+
