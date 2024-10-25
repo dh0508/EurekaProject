@@ -1,16 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>플레이리스트 생성기</title>
+    <style>
+        /* 전체 화면을 감싸는 컨테이너 */
+        .chat-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #chat-box {
+            width: 400px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border-radius: 10px;
+        }
+
+        .bot {
+            color: #00796b;
+        }
+
+        .submit-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .option-button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #00796b;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .option-button:hover {
+            background-color: #004d40;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>플레이리스트 생성기</h1>
-    <form action="/generate" method="POST">
-        <label for="keyword">키워드를 입력하세요:</label>
-        <input type="text" id="keyword" name="keyword" required>
-        <button type="submit">생성</button>
-    </form>
+    <div class="chat-container">
+        <div id="chat-box">
+            <!-- 키워드 입력 화면 -->
+            <div class="chat-message bot">
+                <h1>플레이리스트 생성기</h1>
+                <p>플레이리스트를 위한 키워드를 입력하세요!</p>
+            </div>
+
+            <form action="/generate" method="POST">
+                <input type="text" id="keyword" name="keyword" class="input-field" placeholder="키워드를 입력하세요 (예: 여행, 사랑)" required>
+                <div class="submit-container">
+                    <button class="option-button" type="submit">생성</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

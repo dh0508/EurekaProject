@@ -1,10 +1,12 @@
+
 from flask import Flask, render_template, request
 import requests
 
 app = Flask(__name__)
 
 API_URL = "https://api.spotify.com/v1/search"
-API_TOKEN = "BQDlDpilHSrQrosEP3WCbWqbBQRkusi_CBQnDQwiPc5pePqip3iDXYwFmjPQOUcZlBv_Evz4zamiCwkdeE1eFUxaAuUaQVftjMh0_XEL8XfWACw-6KGtLNSnERzDnSqIypr1N-pHBlqY9arSQyUljge2gMDXhRdHn1JkDEFSx11PiKMu5iyt2_VdYiMA9VzlSrthRnkxhw3TKO6J1_DSwaMmG8nZJQ"  # Spotify API 토큰을 여기에 입력
+API_TOKEN = "BQBuh4Ih_MjIEvvtLaGJiaxjFUKEmnruwM9J3mrBa2DwQu6-rF0PZ3gg7vxdxHCrbE7-M33Rz0nqaz1ykWTVUNTPGT4zywhOFj7xd2QBO9MAPHgTZZ2eABgGHufByW5IdngnV0-QYUANzHtHJLJOemnaw4v4YpIhtj0qeaENDG41VQ6OkbxGZ8AhIR0KE6rxGMihWLIjZt8PIk9U44Ned0ov2QXCMw"  # Spotify API 토큰을 여기에 입력
+#https://accounts.spotify.com/authorize?client_id=1e76dbac870f405bb430db9497177721&response_type=code&redirect_uri=http://localhost:5000/callback&scope=user-read-private%20user-read-email
 
 
 def get_playlist_by_keyword(keyword):

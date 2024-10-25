@@ -1,21 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ keyword }} 플레이리스트</title>
+    <style>
+        .playlist-container {
+            text-align: center;
+            padding: 20px;
+        }
+        .playlist-item {
+            list-style: none;
+            margin-bottom: 10px;
+        }
+        .playlist-item a {
+            text-decoration: none;
+            color: #00796b;
+        }
+        .playlist-item a:hover {
+            text-decoration: underline;
+        }
+        .back-button {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #00796b;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #004d40;
+        }
+    </style>
 </head>
 <body>
-    <h1>"{{ keyword }}" 플레이리스트</h1>
-    <ul>
-        {% for track in playlist %}
-            <li>
-                <a href="{{ track.url }}" target="_blank">{{ track.title }}</a> - {{ track.artist }}
-            </li>
-        {% else %}
-            <li>해당 키워드로 곡을 찾을 수 없습니다.</li>
-        {% endfor %}
-    </ul>
-    <a href="/">다른 키워드로 검색하기</a>
+    <div class="playlist-container">
+        <h1>"{{ keyword }}" 플레이리스트</h1>
+        <ul>
+            {% for track in playlist %}
+                <li class="playlist-item">
+                    <a href="{{ track.url }}" target="_blank">{{ track.title }}</a> - {{ track.artist }}
+                </li>
+            {% else %}
+                <li>해당 키워드로 곡을 찾을 수 없습니다.</li>
+            {% endfor %}
+        </ul>
+        <a href="/" class="back-button">다른 키워드로 검색하기</a>
+    </div>
 </body>
 </html>
