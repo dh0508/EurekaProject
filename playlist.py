@@ -6,8 +6,8 @@ app = Flask(__name__)
 
 # Spotify API 관련 설정
 API_URL = "https://api.spotify.com/v1/search"
-CLIENT_ID = '1e76dbac870f405bb430db9497177721'
-CLIENT_SECRET = '3bac78039a454d7cbb5aac63a711713e'
+CLIENT_ID = '~~~~~~'
+CLIENT_SECRET = '~~~~~~'
 REDIRECT_URI = 'http://localhost:5000/callback'
 TOKEN_URL = 'https://accounts.spotify.com/api/token'
 AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
